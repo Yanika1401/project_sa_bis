@@ -1,5 +1,6 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
-import Sidebar from './components/Sidebar';
+//import Sidebar from './components/Sidebar';
+import Layout from './components/Layout';
 import Login from './pages/Login';
 
 // Trainee Pages
@@ -19,17 +20,6 @@ import HrDashboard from './pages/hr/HrDashboard';
 import ProbationReport from './pages/hr/ProbationReport';
 import UserManagement from './pages/hr/UserManagement';
 
-function Layout({ children }) {
-  const user = JSON.parse(localStorage.getItem('user'));
-  if (!user) return <Navigate to="/login" replace />;
-
-  return (
-    <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#f3f4f6' }}>
-      <Sidebar user={user} />
-      <div style={{ flex: 1, padding: '30px', fontFamily: 'sans-serif' }}>{children}</div>
-    </div>
-  );
-}
 
 export default function App() {
   return (

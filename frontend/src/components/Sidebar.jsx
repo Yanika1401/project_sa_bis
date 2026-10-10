@@ -32,20 +32,40 @@ export default function Sidebar({ user }) {
   const currentMenu = menuConfig[user?.role] || [];
 
   return (
-    <div style={{ width: '250px', backgroundColor: '#f97316', color: '#fff', minHeight: '100vh', padding: '20px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', fontFamily: 'sans-serif' }}>
+    <div style={{
+      width: '240px',
+      backgroundColor: '#ffffff',
+      color: '#1f2937',
+      minHeight: '100vh',
+      borderRight: '1px solid #e5e7eb',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'space-between',
+      fontFamily: 'sans-serif'
+    }}>
       <div>
-        <h1 style={{ fontSize: '28px', fontWeight: 'bold', marginBottom: '30px', textAlign: 'center' }}>TRAIN</h1>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+        <h1 style={{
+          fontSize: '28px',
+          fontWeight: '800',
+          color: '#f96302',
+          margin: 0,
+          padding: '24px 20px 20px'
+        }}>
+          TRAIN
+        </h1>
+
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
           {currentMenu.map((item, index) => {
             const isActive = location.pathname === item.path;
             return (
               <Link key={index} to={item.path} style={{
-                color: '#fff',
+                color: '#1f2937',
                 textDecoration: 'none',
-                padding: '12px 16px',
-                borderRadius: '6px',
-                backgroundColor: isActive ? 'rgba(0,0,0,0.2)' : 'transparent',
-                fontWeight: isActive ? 'bold' : 'normal'
+                padding: '14px 20px',
+                fontSize: '15px',
+                fontWeight: 'bold',
+                backgroundColor: isActive ? '#f3f4f6' : 'transparent',
+                borderRight: isActive ? '4px solid #f59e0b' : '4px solid transparent'
               }}>
                 {item.label}
               </Link>
@@ -53,12 +73,22 @@ export default function Sidebar({ user }) {
           })}
         </div>
       </div>
-      <div style={{ borderTop: '1px solid rgba(255,255,255,0.3)', paddingTop: '15px' }}>
-        <div style={{ fontSize: '13px', marginBottom: '10px' }}>
-          ผู้ใช้งาน: <strong>{user?.fullName}</strong><br />
+
+      <div style={{ borderTop: '1px solid #e5e7eb', padding: '16px 20px' }}>
+        <div style={{ fontSize: '13px', marginBottom: '10px', color: '#4b5563' }}>
+          ผู้ใช้งาน: <strong style={{ color: '#1f2937' }}>{user?.fullName}</strong><br />
           ตำแหน่ง: <span style={{ textTransform: 'uppercase' }}>{user?.role}</span>
         </div>
-        <button onClick={handleLogout} style={{ width: '100%', padding: '10px', backgroundColor: '#dc2626', color: '#fff', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' }}>
+        <button onClick={handleLogout} style={{
+          width: '100%',
+          padding: '10px',
+          backgroundColor: '#ffffff',
+          color: '#dc2626',
+          border: '1px solid #fca5a5',
+          borderRadius: '6px',
+          cursor: 'pointer',
+          fontWeight: 'bold'
+        }}>
           ออกจากระบบ
         </button>
       </div>
