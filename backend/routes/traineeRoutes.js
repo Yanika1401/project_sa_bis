@@ -14,7 +14,12 @@ router.get('/dashboard/:traineeId', async (req, res) => {
 
 router.get('/roadmap/:traineeId', async (req, res) => {
   try {
-    const [rows] = await db.query('SELECT * FROM TrainingRoadmap WHERE Trainee_ID = ?', [req.params.traineeId]);
+    const [rows] = await db.query(
+      `SELECT Roadmap_ID, Trainee_ID, Trainer_ID, Title, Description, Status,
+              Start_Date AS StartDate, End_Date AS EndDate
+       FROM TrainingRoadmap WHERE Trainee_ID = ?`,
+      [req.params.traineeId]
+    );
     res.json(rows);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -30,16 +35,42 @@ router.get('/assignments', async (req, res) => {
   }
 });
 
+// ส่งงาน: สร้าง Submission (Version ถัดไป) + SubmissionFile ในธุรกรรมเดียว
 router.post('/submit', async (req, res) => {
   const { traineeId, assignmentId, fileUrl } = req.body;
+  if (!traineeId || !assignmentId || !fileUrl) {
+    return res.status(400).json({ success: false, message: 'ข้อมูลไม่ครบ' });
+  }
+
+  const conn = await db.getConnection();
   try {
-    await db.query(
-      'INSERT INTO Submission (Trainee_ID, Assignment_ID, File_URL, Status) VALUES (?, ?, ?, "Submitted")',
-      [traineeId, assignmentId, fileUrl]
+    await conn.beginTransaction();
+
+    const [[v]] = await conn.query(
+      `SELECT COALESCE(MAX(Version_No), 0) + 1 AS nextVersion
+       FROM Submission WHERE Trainee_ID = ? AND Assignment_ID = ?`,
+      [traineeId, assignmentId]
     );
+
+    const [r] = await conn.query(
+      `INSERT INTO Submission (Trainee_ID, Assignment_ID, Version_No, Status)
+       VALUES (?, ?, ?, 'Submitted')`,
+      [traineeId, assignmentId, v.nextVersion]
+    );
+
+    await conn.query(
+      `INSERT INTO SubmissionFile (Submission_ID, File_Type, File_URL)
+       VALUES (?, 'URL', ?)`,
+      [r.insertId, fileUrl]
+    );
+
+    await conn.commit();
     res.json({ success: true, message: 'ส่งงานเรียบร้อยแล้ว' });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    await conn.rollback();
+    res.status(500).json({ success: false, message: err.message });
+  } finally {
+    conn.release();
   }
 });
 

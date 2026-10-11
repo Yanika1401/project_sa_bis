@@ -5,7 +5,7 @@ export default function TraineeDashboard() {
   const user = JSON.parse(localStorage.getItem('user'));
 
   useEffect(() => {
-    fetch(`http://localhost:5000/api/trainee/dashboard/${user?.profileId}`)
+    fetch(`/api/trainee/dashboard/${user?.profileId}`)
       .then(res => res.json())
       .then(resData => setData(resData))
       .catch(err => console.error(err));

@@ -6,13 +6,13 @@ export default function EvaluateTask() {
   const user = JSON.parse(localStorage.getItem('user'));
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/trainer/submissions')
+    fetch('/api/trainer/submissions')
       .then(res => res.json())
       .then(data => setSubmissions(data));
   }, []);
 
   const handleEvaluate = (submissionId) => {
-    fetch('http://localhost:5000/api/trainer/evaluate', {
+    fetch('/api/trainer/evaluate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ submissionId, trainerId: user.profileId, ...form })

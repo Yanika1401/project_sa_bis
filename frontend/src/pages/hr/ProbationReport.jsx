@@ -6,7 +6,7 @@ export default function ProbationReport() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    fetch('http://localhost:5000/api/hr/probation-report', {
+    fetch('/api/hr/probation-report', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ ...form, hrId: user.profileId })

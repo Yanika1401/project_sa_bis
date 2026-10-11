@@ -6,7 +6,7 @@ export default function Assignments() {
   const user = JSON.parse(localStorage.getItem('user'));
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/trainee/assignments')
+    fetch('/api/trainee/assignments')
       .then(res => res.json())
       .then(data => setAssignments(data));
   }, []);
@@ -14,7 +14,7 @@ export default function Assignments() {
   const handleSubmit = (assignmentId) => {
     if (!fileUrl) return alert('กรุณากรอก URL ลิงก์งานที่ต้องการส่ง');
 
-    fetch('http://localhost:5000/api/trainee/submit', {
+    fetch('/api/trainee/submit', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ traineeId: user.profileId, assignmentId, fileUrl })

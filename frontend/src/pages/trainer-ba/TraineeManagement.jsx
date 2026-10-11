@@ -4,7 +4,7 @@ export default function TraineeManagement() {
   const [trainees, setTrainees] = useState([]);
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/trainer/trainees')
+    fetch('/api/trainer/trainees')
       .then(res => res.json())
       .then(data => setTrainees(data));
   }, []);

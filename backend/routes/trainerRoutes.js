@@ -14,11 +14,20 @@ router.get('/trainees', async (req, res) => {
 router.get('/submissions', async (req, res) => {
   try {
     const [rows] = await db.query(`
-      SELECT s.Submission_ID, t.Name AS TraineeName, a.Title AS AssignmentTitle, s.File_URL, s.SubmittedAt, s.Status
+      SELECT s.Submission_ID,
+             t.Name AS TraineeName,
+             a.Title AS AssignmentTitle,
+             s.Version_No,
+             (SELECT sf.File_URL FROM SubmissionFile sf
+               WHERE sf.Submission_ID = s.Submission_ID
+               ORDER BY sf.File_ID LIMIT 1) AS File_URL,
+             s.Submitted_At AS SubmittedAt,
+             s.Status
       FROM Submission s
       JOIN Trainee t ON s.Trainee_ID = t.Trainee_ID
       JOIN Assignment a ON s.Assignment_ID = a.Assignment_ID
-      WHERE s.Status = "Submitted"
+      WHERE s.Status = 'Submitted'
+      ORDER BY s.Submitted_At
     `);
     res.json(rows);
   } catch (err) {
@@ -41,13 +50,13 @@ router.post('/evaluate', async (req, res) => {
       INSERT INTO Feedback (Evaluation_ID, Feedback_Note) VALUES (?, ?)
     `, [evalResult.insertId, feedbackNote]);
 
-    await conn.query('UPDATE Submission SET Status = "Graded" WHERE Submission_ID = ?', [submissionId]);
+    await conn.query("UPDATE Submission SET Status = 'Graded' WHERE Submission_ID = ?", [submissionId]);
 
     await conn.commit();
     res.json({ success: true, message: 'ประเมินผลและบันทึก Feedback สำเร็จ' });
   } catch (err) {
     await conn.rollback();
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: err.message, message: err.message });
   } finally {
     conn.release();
   }

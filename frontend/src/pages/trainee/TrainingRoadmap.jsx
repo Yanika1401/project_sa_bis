@@ -5,7 +5,7 @@ export default function TrainingRoadmap() {
   const user = JSON.parse(localStorage.getItem('user'));
 
   useEffect(() => {
-    fetch(`http://localhost:5000/api/trainee/roadmap/${user?.profileId}`)
+    fetch(`/api/trainee/roadmap/${user?.profileId}`)
       .then(res => res.json())
       .then(data => setRoadmap(data));
   }, [user]);
