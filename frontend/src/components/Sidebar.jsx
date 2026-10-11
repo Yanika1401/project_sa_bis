@@ -34,9 +34,16 @@ export default function Sidebar({ user }) {
   return (
     <div style={{
       width: '240px',
+      flexShrink: 0,
       backgroundColor: '#ffffff',
       color: '#1f2937',
-      minHeight: '100vh',
+      // ตรึงแถบให้สูงเท่าหน้าจอเสมอ ไม่ยืดตามเนื้อหาและไม่เลื่อนตามหน้า
+      position: 'sticky',
+      top: 0,
+      height: '100vh',
+      alignSelf: 'flex-start',
+      overflowY: 'auto',
+      boxSizing: 'border-box',
       borderRight: '1px solid #e5e7eb',
       display: 'flex',
       flexDirection: 'column',
@@ -79,16 +86,22 @@ export default function Sidebar({ user }) {
           ผู้ใช้งาน: <strong style={{ color: '#1f2937' }}>{user?.fullName}</strong><br />
           ตำแหน่ง: <span style={{ textTransform: 'uppercase' }}>{user?.role}</span>
         </div>
-        <button onClick={handleLogout} style={{
-          width: '100%',
-          padding: '10px',
-          backgroundColor: '#ffffff',
-          color: '#dc2626',
-          border: '1px solid #fca5a5',
-          borderRadius: '6px',
-          cursor: 'pointer',
-          fontWeight: 'bold'
-        }}>
+        <button
+          onClick={handleLogout}
+          onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#b91c1c'; }}
+          onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = '#dc2626'; }}
+          style={{
+            width: '100%',
+            padding: '10px',
+            backgroundColor: '#dc2626',
+            color: '#ffffff',
+            border: 'none',
+            borderRadius: '6px',
+            cursor: 'pointer',
+            fontWeight: 'bold',
+            transition: 'background-color 0.15s'
+          }}
+        >
           ออกจากระบบ
         </button>
       </div>
