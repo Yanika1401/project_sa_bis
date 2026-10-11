@@ -1,0 +1,4 @@
+.env
+.env.*
+.env.mock
+node_modules/
